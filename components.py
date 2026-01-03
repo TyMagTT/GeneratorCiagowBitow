@@ -16,21 +16,33 @@ class FlipFlop:
     :param input: logic gate or flip-flop output connecting to this input
     :type input: object
 
-    :param output: stored value
+    :param stored: stored value
+    :type stored: bool
+
+    :param output: output value
     :type output: bool
 
     :param clock:
     :type clock: object
     """
-    def __init__(self, input, output):
+    def __init__(self, input, stored=False, output=False):
         self._input = input
+        self._stored = stored
         self._output = output
 
     def value(self):
         return self._output
 
-    def step(self):
-        self._output = self._input.value()
+    def store_value(self):
+        self._stored = self._input.value()
+
+    def update_output(self):
+        self._output = self._stored
+
+    def __str__(self):
+        stored = self._stored
+        output = self._output
+        return f'I have {stored} stored and I am outputting {output}'
 
 
 class Gate:
