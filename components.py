@@ -1,6 +1,4 @@
-
-
-class NotBoolError(TypeError):
+class InvalidInputNumber(Exception):
     pass
 
 
@@ -16,14 +14,11 @@ class FlipFlop:
     :param input: logic gate or flip-flop output connecting to this input
     :type input: object
 
-    :param stored: stored value
+    :param stored: stored value, defaults to False
     :type stored: bool
 
-    :param output: output value
+    :param output: output value, defaults to False
     :type output: bool
-
-    :param clock:
-    :type clock: object
     """
     def __init__(self, input, stored=False, output=False):
         self._input = input
@@ -39,15 +34,48 @@ class FlipFlop:
     def update_output(self):
         self._output = self._stored
 
-    def __str__(self):
-        stored = self._stored
-        output = self._output
-        return f'I have {stored} stored and I am outputting {output}'
-
 
 class Gate:
     """
-    Class Gate,
+    Logic gate,
+    Contains attributes:
+
+    :param input: input list of flip-flop outputs
+    :type input: list of objects
+
+    :param output: logic gate output, defaults to False
+    :type output: bool
+    """
+    def __init__(self, input, output=False):
+        self._input = input
+        self._output = output
+
+    def output(self):
+        return self._output
+    
+
+class MultiInputGate(Gate):
+    """
+    Logic gate with 2 or more inputs,
+    Contains attributes:
+
+    :param input: input list of flip-flop outputs (2 or more)
+    :type input: list of objects
+
+    :param output: logic gate output, defaults to False
+    :type output: bool
+    """
+    def __init__(self, input, output=False):
+        if type(input) is not list:
+            raise NotListError()
+        if len(input) < 2:
+            raise InvalidInputNumber()
+        super().__init__(input, output)
+
+
+class NOT(Gate):
+    """
+    NOT gate
     Contains attributes:
 
     :param input: input list of flip-flop outputs
@@ -55,61 +83,54 @@ class Gate:
 
     :param output: logic gate output
     :type output: bool
-
-    :param enabled: enable working, defaults to False
-    :type enabled: bool
     """
-    def __init__(self, input, output, enabled=False):
-        self._input = input
-        self._output = output
-        self._enabled = enabled
+    def __init__(self, input, output):
+        super().__init__(input, output)
 
-    def input(self):
-        return self._input
-
-    def output(self):
-        return self._output
-
-    def enabled(self):
-        return self._enabled
-
-    def enable(self):
-        self._enabled = True
-
-    def disable(self):
-        self._enabled = False
-
-
-class NOT(Gate):
-    """
-    NOT gate, calculating one bool output based on a bool input
-    when enabled
-    """
     def calculate(self):
         return not self._input
 
+    def update_output(self):
+        self._output = self.calculate()
 
-class AND(Gate):
+
+class AND(MultiInputGate):
     """
     AND gate, calculating one bool output based on a list of inputs
     when enabled
     """
+    def __init__(self, input, output=False):
+        super().__init__(input, output)
+
     def calculate(self):
         for input in self._input:
-            if not input:
+            if not input.value():
                 return False
         return True
 
+    def update_output(self):
+        self._output = self.calculate()
 
-class OR(Gate):
+
+class OR(MultiInputGate):
     """
     OR gate, calculating one bool output based on a list of inputs
     when enabled
     """
-    pass
+    def __init__(self, input, output=False):
+        super().__init__(input, output)
+
+    def calculate(self):
+        for input in self._input:
+            if not input.value():
+                return True
+        return False
+
+    def update_output(self):
+        self._output = self.calculate()
 
 
-class XOR(Gate):
+class XOR(MultiInputGate):
     """
     XOR gate, calculating one bool output based on a list of inputs
     when enabled
@@ -117,7 +138,7 @@ class XOR(Gate):
     pass
 
 
-class NAND(Gate):
+class NAND(MultiInputGate):
     """
     NAND gate, calculating one bool output based on a list of inputs
     when enabled
@@ -125,7 +146,7 @@ class NAND(Gate):
     pass
 
 
-class NOR(Gate):
+class NOR(MultiInputGate):
     """
     NOR gate, calculating one bool output based on a list of inputs
     when enabled
@@ -133,7 +154,7 @@ class NOR(Gate):
     pass
 
 
-class NXOR(Gate):
+class NXOR(MultiInputGate):
     """
     NXOR gate, calculating one bool output based on a list of inputs
     when enabled
@@ -176,4 +197,7 @@ class Register:
         pass
 
     def next_step(self):
+        # 1. update gates
+        # 2. store flipflop values
+        # 3. update flipflops
         pass
