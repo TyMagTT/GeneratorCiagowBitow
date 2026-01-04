@@ -78,8 +78,8 @@ class NOT(Gate):
     NOT gate
     Contains attributes:
 
-    :param input: input list of flip-flop outputs
-    :type input: list of objects
+    :param input: flip-flop output connecting to this input
+    :type input: object
 
     :param output: logic gate output
     :type output: bool
@@ -96,8 +96,14 @@ class NOT(Gate):
 
 class AND(MultiInputGate):
     """
-    AND gate, calculating one bool output based on a list of inputs
-    when enabled
+    AND gate
+    Contains attributes:
+
+    :param input: list of flip-flop outputs connecting to this input
+    :type input: list of objects
+
+    :param output: logic gate output
+    :type output: bool
     """
     def __init__(self, input, output=False):
         super().__init__(input, output)
@@ -114,8 +120,63 @@ class AND(MultiInputGate):
 
 class OR(MultiInputGate):
     """
-    OR gate, calculating one bool output based on a list of inputs
-    when enabled
+    OR gate
+    Contains attributes:
+
+    :param input: list of flip-flop outputs connecting to this input
+    :type input: list of objects
+
+    :param output: logic gate output
+    :type output: bool
+    """
+    def __init__(self, input, output=False):
+        super().__init__(input, output)
+
+    def calculate(self):
+        for input in self._input:
+            if input.value():
+                return True
+        return False
+
+    def update_output(self):
+        self._output = self.calculate()
+
+
+class XOR(MultiInputGate):
+    """
+    XOR gate
+    Contains attributes:
+
+    :param input: list of flip-flop outputs connecting to this input
+    :type input: list of objects
+
+    :param output: logic gate output
+    :type output: bool
+    """
+    def __init__(self, input, output=False):
+        super().__init__(input, output)
+
+    def calculate(self):
+        for input in self._input:
+            true_counter = 0
+            if input.value():
+                true_counter += 1
+        return true_counter % 2 == 1
+
+    def update_output(self):
+        self._output = self.calculate()
+
+
+class NAND(MultiInputGate):
+    """
+    NAND gate
+    Contains attributes:
+
+    :param input: list of flip-flop outputs connecting to this input
+    :type input: list of objects
+
+    :param output: logic gate output
+    :type output: bool
     """
     def __init__(self, input, output=False):
         super().__init__(input, output)
@@ -130,36 +191,53 @@ class OR(MultiInputGate):
         self._output = self.calculate()
 
 
-class XOR(MultiInputGate):
-    """
-    XOR gate, calculating one bool output based on a list of inputs
-    when enabled
-    """
-    pass
-
-
-class NAND(MultiInputGate):
-    """
-    NAND gate, calculating one bool output based on a list of inputs
-    when enabled
-    """
-    pass
-
-
 class NOR(MultiInputGate):
     """
-    NOR gate, calculating one bool output based on a list of inputs
-    when enabled
+    NOR gate
+    Contains attributes:
+
+    :param input: list of flip-flop outputs connecting to this input
+    :type input: list of objects
+
+    :param output: logic gate output
+    :type output: bool
     """
-    pass
+    def __init__(self, input, output=False):
+        super().__init__(input, output)
+
+    def calculate(self):
+        for input in self._input:
+            if input.value():
+                return False
+        return True
+
+    def update_output(self):
+        self._output = self.calculate()
 
 
 class NXOR(MultiInputGate):
     """
-    NXOR gate, calculating one bool output based on a list of inputs
-    when enabled
+    NXOR gate
+    Contains attributes:
+
+    :param input: list of flip-flop outputs connecting to this input
+    :type input: list of objects
+
+    :param output: logic gate output
+    :type output: bool
     """
-    pass
+    def __init__(self, input, output=False):
+        super().__init__(input, output)
+
+    def calculate(self):
+        for input in self._input:
+            true_counter = 0
+            if input.value():
+                true_counter += 1
+        return true_counter % 2 == 0
+
+    def update_output(self):
+        self._output = self.calculate()
 
 
 class Register:

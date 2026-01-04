@@ -1,6 +1,9 @@
-from components import FlipFlop, AND, OR, InvalidInputNumber, NotListError
+from components import (
+    InvalidInputNumber, NotListError,
+    FlipFlop,
+    NOT, AND, OR, XOR, NAND, NOR, NXOR
+)
 import pytest
-
 
 def test_FlipFlop_create():
     D1 = FlipFlop(None, True, True)
@@ -30,6 +33,10 @@ def test_FlipFlop_step():
     assert not D1.value()
     assert D2.value()
     assert not D3.value()
+
+
+def test_NOT_create_invalid():
+    pass
 
 
 def test_AND_calculate():
