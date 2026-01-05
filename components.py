@@ -6,6 +6,14 @@ class NotListError(TypeError):
     pass
 
 
+class NotFlipFlopError(TypeError):
+    pass
+
+
+class NotBoolError(TypeError):
+    pass
+
+
 class FlipFlop:
     """
     Synchronous D-type flip-flop,
@@ -48,11 +56,13 @@ class Gate:
     """
     def __init__(self, input, output=False):
         self._input = input
+        if type(output) is not bool:
+            raise NotBoolError()
         self._output = output
 
     def output(self):
         return self._output
-    
+
 
 class MultiInputGate(Gate):
     """
@@ -81,14 +91,16 @@ class NOT(Gate):
     :param input: flip-flop output connecting to this input
     :type input: object
 
-    :param output: logic gate output
+    :param output: logic gate output, defaults to False
     :type output: bool
     """
-    def __init__(self, input, output):
+    def __init__(self, input, output=False):
+        if type(input) is not FlipFlop:
+            raise NotFlipFlopError
         super().__init__(input, output)
 
     def calculate(self):
-        return not self._input
+        return not self._input.value()
 
     def update_output(self):
         self._output = self.calculate()
@@ -157,8 +169,8 @@ class XOR(MultiInputGate):
         super().__init__(input, output)
 
     def calculate(self):
+        true_counter = 0
         for input in self._input:
-            true_counter = 0
             if input.value():
                 true_counter += 1
         return true_counter % 2 == 1
@@ -215,9 +227,9 @@ class NOR(MultiInputGate):
         self._output = self.calculate()
 
 
-class NXOR(MultiInputGate):
+class XNOR(MultiInputGate):
     """
-    NXOR gate
+    XNOR gate
     Contains attributes:
 
     :param input: list of flip-flop outputs connecting to this input
@@ -230,8 +242,8 @@ class NXOR(MultiInputGate):
         super().__init__(input, output)
 
     def calculate(self):
+        true_counter = 0
         for input in self._input:
-            true_counter = 0
             if input.value():
                 true_counter += 1
         return true_counter % 2 == 0
