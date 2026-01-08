@@ -1,3 +1,4 @@
+
 class InvalidInputNumber(Exception):
     pass
 
@@ -257,7 +258,7 @@ class Register:
     Register storing all flip-flop and gate objects
     and connections between them
     """
-    def __init__(self):
+    def __init__(self, objects):
         pass
 
     def connect(self, first, second):
@@ -286,7 +287,7 @@ class Register:
         """
         pass
 
-    def next_step(self):
+    def step(self):
         # 1. update gates
         # 2. store flipflop values
         # 3. update flipflops
