@@ -7,38 +7,41 @@ import json
 def read_from_json(file_handle):
     flipflops = []
     gates = []
+    created_flipflops = {}
+    created_gates = {}
     data = json.load(file_handle)
-    objects = {}
     for item in data:
         try:
             # create components
             # connect components
             id = item['id']
             inputs = item['input']
+            placeholder_FlipFlop = FlipFlop(None)
+            placeholder_list = [placeholder_FlipFlop, placeholder_FlipFlop]
             if 'gate' in item:
                 # gate
                 gate_type = item['gate']
-                gate_name = f'gate{id}'
                 if gate_type == 'NOT':
-                    objects[gate_name] = NOT(None)
+                    # cannot create with none
+                    created_gates[id] = NOT(placeholder_FlipFlop)
                 elif gate_type == 'AND':
-                    objects[gate_name] = AND(None)
+                    created_gates[id] = AND(placeholder_list)
                 elif gate_type == 'OR':
-                    objects[gate_name] = OR(None)
+                    created_gates[id] = OR(placeholder_list)
                 elif gate_type == 'XOR':
-                    objects[gate_name] = XOR(None)
+                    created_gates[id] = XOR(placeholder_list)
                 elif gate_type == 'NAND':
-                    objects[gate_name] = NAND(None)
+                    created_gates[id] = NAND(placeholder_list)
                 elif gate_type == 'NOR':
-                    objects[gate_name] = NOR(None)
+                    created_gates[id] = NOR(placeholder_list)
                 elif gate_type == 'XNOR':
-                    objects[gate_name] = XNOR(None)
-                objects[id] = FlipFlop(None)
+                    created_gates[id] = XNOR(placeholder_list)
+                created_flipflops[id] = FlipFlop(None)
             else:
                 # no gate
-                objects[id] = FlipFlop(None)
+                created_flipflops[id] = FlipFlop(None)
                 pass
-        except Exception:
-            pass
+        except Exception as e:
+            return e
 
     return flipflops, gates
