@@ -10,6 +10,10 @@ class NotListError(TypeError):
     pass
 
 
+class NotDictError(TypeError):
+    pass
+
+
 class NotFlipFlopError(TypeError):
     pass
 

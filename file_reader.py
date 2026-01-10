@@ -5,9 +5,7 @@ import json
 from errors import (
     IncorrectGateType,
     NotListError,
-    MissingData,
-    NotFlipFlopError,
-    NotListError
+    MissingData
 )
 
 

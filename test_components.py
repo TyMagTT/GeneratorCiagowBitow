@@ -1,5 +1,5 @@
 from components import (
-    FlipFlop, Gate, MultiInputGate,
+    FlipFlop, Gate, MultiInputGate, Register,
     NOT, AND, OR, XOR, NAND, NOR, XNOR
 )
 import pytest
@@ -7,8 +7,10 @@ from errors import (
     NotBoolError,
     NotFlipFlopError,
     NotListError,
-    InvalidInputNumber
+    InvalidInputNumber,
+    NotDictError
 )
+from file_reader import create_from_json
 
 
 def test_FlipFlop_create():
@@ -17,9 +19,9 @@ def test_FlipFlop_create():
     D3 = FlipFlop(D2, False, False)
     D1._input = D3
 
-    assert D1.value()
-    assert not D2.value()
-    assert not D3.value()
+    assert D1.output()
+    assert not D2.output()
+    assert not D3.output()
 
 
 def test_FlipFlop_step():
@@ -36,9 +38,9 @@ def test_FlipFlop_step():
     D2.update_output()
     D3.update_output()
 
-    assert not D1.value()
-    assert D2.value()
-    assert not D3.value()
+    assert not D1.output()
+    assert D2.output()
+    assert not D3.output()
 
 
 def test_Gate_create():
@@ -206,3 +208,68 @@ def test_XNOR_update():
     assert not G1.output()
     G1.update_output()
     assert G1.output()
+
+
+def test_register_create():
+    with open('test.json') as file_handle:
+        flipflops, gates = create_from_json(file_handle)
+    register = Register(flipflops, gates)
+    assert not register.output('1')
+    assert not register.output('2')
+    assert not register.output('3')
+    assert not register.output('4')
+    assert not register.output('5')
+
+
+def test_register_not_dict():
+    with pytest.raises(NotDictError):
+        Register('', [])
+
+
+def test_register_set_value():
+    with open('test.json') as file_handle:
+        flipflops, gates = create_from_json(file_handle)
+    register = Register(flipflops, gates)
+    assert not register.output('1')
+    register.set_value('1', True)
+    assert register.output('1')
+
+
+def test_register_set_value_invalid_key():
+    with open('test.json') as file_handle:
+        flipflops, gates = create_from_json(file_handle)
+    register = Register(flipflops, gates)
+    with pytest.raises(KeyError):
+        register.set_value('6', True)
+
+
+def test_register_set_value_invalid_value():
+    with open('test.json') as file_handle:
+        flipflops, gates = create_from_json(file_handle)
+    register = Register(flipflops, gates)
+    with pytest.raises(NotBoolError):
+        register.set_value('1', 0)
+
+
+def test_register_step():
+    with open('test.json') as file_handle:
+        flipflops, gates = create_from_json(file_handle)
+    register = Register(flipflops, gates)
+    register.set_value('1', True)
+    assert register.output('1')
+    assert not register.output('2')
+    assert not register.output('3')
+    assert not register.output('4')
+    assert not register.output('5')
+    register.step()
+    assert not register.output('1')
+    assert register.output('2')
+    assert not register.output('3')
+    assert not register.output('4')
+    assert not register.output('5')
+    register.step()
+    assert not register.output('1')
+    assert not register.output('2')
+    assert register.output('3')
+    assert register.output('4')
+    assert not register.output('5')

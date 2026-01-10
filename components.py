@@ -2,7 +2,8 @@ from errors import (
     NotBoolError,
     NotFlipFlopError,
     NotListError,
-    InvalidInputNumber
+    InvalidInputNumber,
+    NotDictError
 )
 
 
@@ -30,11 +31,11 @@ class FlipFlop:
             raise TypeError()
         self._input = new_input
 
-    def value(self):
+    def output(self):
         return self._output
 
     def store_value(self):
-        self._stored = self._input.value()
+        self._stored = self._input.output()
 
     def update_output(self):
         self._output = self._stored
@@ -109,7 +110,7 @@ class NOT(Gate):
         self._input = new_input
 
     def calculate(self):
-        return not self._input.value()
+        return not self._input.output()
 
     def update_output(self):
         self._output = self.calculate()
@@ -131,7 +132,7 @@ class AND(MultiInputGate):
 
     def calculate(self):
         for input in self._input:
-            if not input.value():
+            if not input.output():
                 return False
         return True
 
@@ -155,7 +156,7 @@ class OR(MultiInputGate):
 
     def calculate(self):
         for input in self._input:
-            if input.value():
+            if input.output():
                 return True
         return False
 
@@ -180,7 +181,7 @@ class XOR(MultiInputGate):
     def calculate(self):
         true_counter = 0
         for input in self._input:
-            if input.value():
+            if input.output():
                 true_counter += 1
         return true_counter % 2 == 1
 
@@ -204,7 +205,7 @@ class NAND(MultiInputGate):
 
     def calculate(self):
         for input in self._input:
-            if not input.value():
+            if not input.output():
                 return True
         return False
 
@@ -228,7 +229,7 @@ class NOR(MultiInputGate):
 
     def calculate(self):
         for input in self._input:
-            if input.value():
+            if input.output():
                 return False
         return True
 
@@ -253,7 +254,7 @@ class XNOR(MultiInputGate):
     def calculate(self):
         true_counter = 0
         for input in self._input:
-            if input.value():
+            if input.output():
                 true_counter += 1
         return true_counter % 2 == 0
 
@@ -265,38 +266,37 @@ class Register:
     """
     Register storing all flip-flop and gate objects
     and connections between them
+    Contains attributes:
+
+    :param flipflops: flipflop objects in the register
+    :type flipflops: dict
+
+    :param gates: gate objects in the register
+    :type gates: dict
     """
-    def __init__(self, objects):
-        pass
+    def __init__(self, flipflops, gates):
+        if type(flipflops) is not dict:
+            raise NotDictError
+        if type(gates) is not dict:
+            raise NotDictError
+        self.flipflops = flipflops
+        self.gates = gates
 
-    def connect(self, first, second):
-        """
-        Connect function, simulates a connection between parts
-        Contains attributes:
+    def set_value(self, id, new_value):
+        if type(new_value) is not bool:
+            raise NotBoolError()
+        self.flipflops[id]._output = new_value
 
-        :param first: object which output is to be connected
-        :type first: object
-
-        :param second: object which input is to be connected
-        :type second: object
-        """
-        pass
-
-    def disconnect(self, first, second):
-        """
-        Connect function, removes a connection between parts
-        Contains attributes:
-
-        :param first: object which output is to be disconnected
-        :type first: object
-
-        :param second: object which input is to be disconnected
-        :type second: object
-        """
-        pass
+    def output(self, id):
+        return self.flipflops[id].output()
 
     def step(self):
         # 1. update gates
         # 2. store flipflop values
         # 3. update flipflops
-        pass
+        for gate in self.gates.values():
+            gate.update_output()
+        for flipflop in self.flipflops.values():
+            flipflop.store_value()
+        for flipflop in self.flipflops.values():
+            flipflop.update_output()
