@@ -10,35 +10,38 @@ from errors import (
     NotJsonError
 )
 
-messages_pl = {
-        'welcome': 'Witaj użytkowniku! Ten program służy do generowania ciągów bitów na podstawie rejestru',
+msg_pl = {
+        'welcome': 'Witaj użytkowniku! Ten program generuje ciągi bitów.',
         'load_file': 'Podaj ścieżkę prowadzącą do pliku z połączeniami: ',
         'again': 'Spróbuj ponownie:',
         'no_file': 'Nie odnaleniono pliku.',
         'not_json': 'Plik musi mieć rozszerzenie ".json".',
         'no_access': 'Nie masz dostępu do tego pliku.',
-        'input_values': 'Podaj identyfikatory przerzutników, ktorym chcesz ustawić wartości początkowe, oddzielone przecinkiem i spacją (domyślnie false)',
+        'input_values1': 'Podaj identyfikatory przerzutników,',
+        'input_values2': 'ktorym chcesz ustawić wartości początkowe,',
+        'input_values3': 'oddzielone przecinkiem i spacją (domyślnie false)',
         'key_error': 'Nie znaleziono przerzutnika o identyfikatorze:',
-        'choose_replace': 'Aby zamienić podany identyfikator na inny wpisz: "replace"',
+        'msg_replace': 'Aby zamienić podane id na inne wpisz: "replace"',
         'replace': 'Podaj poprawiony identyfikator: ',
-        'choose_skip': 'Aby pominąć podany identyfikator wpisz: "skip"',
+        'msg_skip': 'Aby pominąć podany identyfikator wpisz: "skip"',
         'wrong_choice': 'Polecenie nie rozpoznane.',
         'input_value': 'Podaj wartość przerzutnika',
         'value_not_recognised': 'Błędna wartość, dostępne wartości:',
         'input_choices': '(True/true/1 lub False/false/0)',
-        'choose_fixed': 'Aby wybrać konkretną długość ciągu do wygenerowania wpisz: "fixed"',
-        'choose_loop': 'Aby wybrać generowanie aż ciąg się zapętli wpisz: "loop"',
+        'msg_fixed': 'Aby wybrać ilość ciągów do wygenerowania wpisz: "fixed"',
+        'msg_loop': 'Aby wybrać generowanie aż ciąg się zapętli wpisz: "loop"',
         'fixed': 'Podaj liczbę ciągów które chcesz wygenerować: ',
         'not_int': 'Liczba bitów musi być liczbą całkowitą.',
         'generated_strings': 'Wygenerowane ciągi:',
         'space_utilization': 'Stopień wykorzystania przestrzeni:',
-        'avg_difference': 'Średnia liczba bitów różniących się między ciągami:'
+        'avg_difference': 'Średnia liczba bitów różniących się między ciągami:',
+        'save': 'Zapisać wyniki? "yes" jeśli tak, "no" jeśli nie'
     }
 
 
 def load_file():
-    print(messages_pl['welcome'])
-    print(messages_pl['load_file'])
+    print(msg_pl['welcome'])
+    print(msg_pl['load_file'])
     loading = True
     while loading:
         path = input()
@@ -46,50 +49,50 @@ def load_file():
             flipflops, gates = open_file(path)
             loading = False
         except FileNotFoundError:
-            error_message = f'{messages_pl['no_file']} {messages_pl['again']}'
+            error_message = f'{msg_pl['no_file']} {msg_pl['again']}'
             print(error_message)
         except NotJsonError:
-            error_message = f'{messages_pl['not_json']} {messages_pl['again']}'
+            error_message = f'{msg_pl['not_json']} {msg_pl['again']}'
             print(error_message)
         except PermissionError:
-            error_message = f'{messages_pl['no_access']} {messages_pl['again']}'
+            error_message = f'{msg_pl['no_access']} {msg_pl['again']}'
             print(error_message)
-        except Exception as e:
-            print(e)
     return Register(flipflops, gates)
 
 
 def set_starting_values(register):
-    print(messages_pl['input_values'])
+    msg = f'{msg_pl['input_values1']} {msg_pl['input_values2']}'
+    msg = f'{msg} {msg_pl['input_values3']}'
+    print(msg)
     input_values = input()
     input_list = input_values.split(', ')
     for key in input_list:
         setting = True
         if key not in register.flipflops:
             correcting = True
-            error_message = f'{messages_pl['key_error']} {key}'
+            error_message = f'{msg_pl['key_error']} {key}'
             print(error_message)
             while correcting:
-                print(messages_pl['choose_replace'])
-                print(messages_pl['choose_skip'])
+                print(msg_pl['msg_replace'])
+                print(msg_pl['msg_skip'])
                 choice = input()
                 if choice == 'replace':
                     while correcting:
-                        new_key = input(messages_pl['replace'])
+                        new_key = input(msg_pl['replace'])
                         if new_key in register.flipflops:
                             key = new_key
                             correcting = False
                         else:
-                            error_message = f'{messages_pl['key_error']} {new_key} {messages_pl['again']}'
+                            error_message = f'{msg_pl['key_error']} {new_key} {msg_pl['again']}'
                             print(error_message)
                 elif choice == 'skip':
                     correcting = False
                     setting = False
                 else:
-                    error_message = f'{messages_pl['wrong_choice']} {messages_pl['again']}'
+                    error_message = f'{msg_pl['wrong_choice']} {msg_pl['again']}'
                     print(error_message)
         while setting:
-            msg = f'{messages_pl['input_value']} {key} {messages_pl['input_choices']}: '
+            msg = f'{msg_pl['input_value']} {key} {msg_pl['input_choices']}: '
             value = input(msg)
             if value == 'True' or value == 'true' or value == '1':
                 register.set_value(key, True)
@@ -98,33 +101,33 @@ def set_starting_values(register):
                 register.set_value(key, False)
                 setting = False
             else:
-                error_message = f'{messages_pl["value_not_recognised"]} {messages_pl["input_choices"]}'
+                error_message = f'{msg_pl["value_not_recognised"]} {msg_pl["input_choices"]}'
                 print(error_message)
 
 
 def choose_mode():
     choosing_mode = True
     while choosing_mode:
-        print(messages_pl['choose_fixed'])
-        print(messages_pl['choose_loop'])
+        print(msg_pl['msg_fixed'])
+        print(msg_pl['msg_loop'])
         mode = input()
         if mode == 'fixed':
             setting_fixed = True
             while setting_fixed:
-                print(messages_pl['fixed'])
+                print(msg_pl['fixed'])
                 length = input()
                 try:
                     length = int(length)
                     setting_fixed = False
                     choosing_mode = False
                 except ValueError:
-                    print(messages_pl['not_int'])
+                    print(msg_pl['not_int'])
                 return False, length
         elif mode == 'loop':
             choosing_mode = False
             return True, None
         else:
-            error_message = f'{messages_pl['wrong_choice']} {messages_pl['again']}'
+            error_message = f'{msg_pl['wrong_choice']} {msg_pl['again']}'
             print(error_message)
 
 
@@ -186,13 +189,37 @@ def calculate_average_difference(string_dict):
 
 
 def print_statistics(string_dict, space_utilization, average_difference):
-    print(messages_pl['generated_strings'])
+    print(msg_pl['generated_strings'])
     string_list = list(string_dict.keys())
     print(string_list)
-    msg = f'{messages_pl['space_utilization']} {space_utilization*100}%'
+    msg = f'{msg_pl['space_utilization']} {space_utilization*100}%'
     print(msg)
-    msg = f'{messages_pl['avg_difference']} {average_difference}'
+    msg = f'{msg_pl['avg_difference']} {average_difference}'
     print(msg)
+
+
+def save_statistics(string_dict, space_utilization, average_difference):
+    string_list = list(string_dict.keys())
+    path = 'result.txt'
+    with open(path, 'w') as file_handle:
+        file_handle.write(f'Generated strings: {string_list}\n')
+        file_handle.write(f'Space utilization: {space_utilization*100}%\n')
+        file_handle.write(f'Average difference: {average_difference}')
+
+
+def ask_if_save(string_dict, space_utilization, average_difference):
+    asking = True
+    while asking:
+        print(msg_pl['save'])
+        answer = input()
+        if answer == 'yes':
+            save_statistics(string_dict, space_utilization, average_difference)
+            asking = False
+        elif answer == 'no':
+            asking = False
+        else:
+            msg = f'{msg_pl['wrong_choice']} {msg_pl['again']}'
+            print(msg)
 
 
 def main():
@@ -207,6 +234,7 @@ def main():
     average_difference = calculate_average_difference(string_dict)
 
     print_statistics(string_dict, space_utilization, average_difference)
+    ask_if_save(string_dict, space_utilization, average_difference)
 
 
 if __name__ == "__main__":

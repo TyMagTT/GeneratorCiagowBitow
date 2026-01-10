@@ -76,7 +76,9 @@ def create_from_json(file_handle):
     gates = {}
     component_list = json.load(file_handle)
     created_flipflops, created_gates = create_components(component_list)
-    flipflops, gates = connect_components(component_list, created_flipflops, created_gates)
+    flipflops, gates = connect_components(component_list,
+                                          created_flipflops,
+                                          created_gates)
 
     return flipflops, gates
 
