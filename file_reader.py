@@ -5,8 +5,10 @@ import json
 from errors import (
     IncorrectGateType,
     NotListError,
-    MissingData
+    MissingData,
+    NotJsonError
 )
+from os.path import splitext
 
 
 def create_components(component_list):
@@ -76,4 +78,13 @@ def create_from_json(file_handle):
     created_flipflops, created_gates = create_components(component_list)
     flipflops, gates = connect_components(component_list, created_flipflops, created_gates)
 
+    return flipflops, gates
+
+
+def open_file(path):
+    extension = splitext(path)[1]
+    if extension != '.json':
+        raise NotJsonError()
+    with open(path) as file_handle:
+        flipflops, gates = create_from_json(file_handle)
     return flipflops, gates

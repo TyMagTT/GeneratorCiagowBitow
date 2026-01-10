@@ -28,3 +28,7 @@ class IncorrectGateType(Exception):
 
 class MissingData(KeyError):
     pass
+
+
+class NotJsonError(Exception):
+    pass
