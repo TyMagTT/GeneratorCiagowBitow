@@ -30,6 +30,9 @@ messages_pl = {
         'choose_loop': 'Aby wybrać generowanie aż ciąg się zapętli wpisz: "loop"',
         'fixed': 'Podaj liczbę ciągów które chcesz wygenerować: ',
         'not_int': 'Liczba bitów musi być liczbą całkowitą.',
+        'generated_strings': 'Wygenerowane ciągi:',
+        'space_utilization': 'Stopień wykorzystania przestrzeni:',
+        'avg_difference': 'Średnia liczba bitów różniących się między ciągami:'
     }
 
 
@@ -182,27 +185,28 @@ def calculate_average_difference(string_dict):
     return different_bits_sum/(strings_number - 1)
 
 
-def main():
-    # load file
-    # set starting values
-    # choose output
-    # mode (fixed number/until loop)
-    # generate
-    # save?
-    # compare
+def print_statistics(string_dict, space_utilization, average_difference):
+    print(messages_pl['generated_strings'])
+    string_list = list(string_dict.keys())
+    print(string_list)
+    msg = f'{messages_pl['space_utilization']} {space_utilization*100}%'
+    print(msg)
+    msg = f'{messages_pl['avg_difference']} {average_difference}'
+    print(msg)
 
+
+def main():
     register = load_file()
     set_starting_values(register)
     looping, length = choose_mode()
-
     if looping:
         string_dict = generate_string_looping(register)
     else:
         string_dict = generate_string_fixed(register, length)
+    space_utilization = calculate_space_utilization(register, string_dict)
+    average_difference = calculate_average_difference(string_dict)
 
-    print(string_dict)
-    print(calculate_space_utilization(register, string_dict))
-    print(calculate_average_difference(string_dict))
+    print_statistics(string_dict, space_utilization, average_difference)
 
 
 if __name__ == "__main__":
