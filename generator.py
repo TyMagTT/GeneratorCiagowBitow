@@ -11,6 +11,26 @@ from errors import (
 )
 
 
+def load_file():
+    pass
+
+
+def starting_values():
+    pass
+
+
+def choose_output():
+    pass
+
+
+def choose_mode():
+    pass
+
+
+def generate_string():
+    pass
+
+
 def main():
     # load file
     # set starting values
@@ -69,7 +89,7 @@ def main():
         setting = True
         if key not in register.flipflops:
             correcting = True
-            error_message = f'{messages_pl['key_error']} {key}'
+            error_message = f'\n{messages_pl['key_error']} {key}\n'
             print(error_message)
             while correcting:
                 print(messages_pl['choose_replace'])
@@ -82,7 +102,8 @@ def main():
                             key = new_key
                             correcting = False
                         else:
-                            error_message = f'{messages_pl['key_error']} {new_key} {messages_pl['again']}'
+                            error_message = f'\n{messages_pl['key_error']} {new_key} {messages_pl['again']}'
+                            print(error_message)
                 elif choice == 'skip':
                     correcting = False
                     setting = False
@@ -90,7 +111,7 @@ def main():
                     error_message = f'{messages_pl['wrong_choice']} {messages_pl['again']}'
                     print(error_message)
         while setting:
-            msg = f'{messages_pl['input_value']} {key} {messages_pl['input_choices']}: '
+            msg = f'\n{messages_pl['input_value']} {key} {messages_pl['input_choices']}: '
             value = input(msg)
             if value == 'True' or value == 'true' or value == '1':
                 register.set_value(key, True)
@@ -114,6 +135,7 @@ def main():
 
     choosing_mode = True
     while choosing_mode:
+        print('\n')
         print(messages_pl['choose_fixed'])
         print(messages_pl['choose_loop'])
         mode = input()
