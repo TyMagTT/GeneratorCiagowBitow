@@ -15,7 +15,7 @@ class FlipFlop:
     :param input: logic gate or flip-flop output connecting to this input
     :type input: object
 
-    :param stored: stored value, defaults to False
+    :param stored: stored value, used only during stepping, defaults to False
     :type stored: bool
 
     :param output: output value, defaults to False
@@ -291,6 +291,9 @@ class Register:
         return self.flipflops[id].output()
 
     def step(self):
+        """
+        Step function, moves all flipflop outputs one step forward
+        """
         # 1. update gates
         # 2. store flipflop values
         # 3. update flipflops

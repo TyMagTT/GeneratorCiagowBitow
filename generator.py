@@ -26,7 +26,7 @@ msg_pl = {
         'msg_skip': 'Aby pominąć podany identyfikator wpisz: "skip"',
         'wrong_choice': 'Polecenie nie rozpoznane.',
         'input_value': 'Podaj wartość przerzutnika',
-        'value_not_recognised': 'Błędna wartość, dostępne wartości:',
+        'invalid_value': 'Błędna wartość, dostępne wartości:',
         'input_choices': '(True/true/1 lub False/false/0)',
         'msg_fixed': 'Aby wybrać ilość ciągów do wygenerowania wpisz: "fixed"',
         'msg_loop': 'Aby wybrać generowanie aż ciąg się zapętli wpisz: "loop"',
@@ -34,7 +34,7 @@ msg_pl = {
         'not_int': 'Liczba bitów musi być liczbą całkowitą.',
         'generated_strings': 'Wygenerowane ciągi:',
         'space_utilization': 'Stopień wykorzystania przestrzeni:',
-        'avg_difference': 'Średnia liczba bitów różniących się między ciągami:',
+        'avg_diff': 'Średnia liczba bitów różniących się między ciągami:',
         'save': 'Zapisać wyniki? "yes" jeśli tak, "no" jeśli nie'
     }
 
@@ -83,14 +83,15 @@ def set_starting_values(register):
                             key = new_key
                             correcting = False
                         else:
-                            error_message = f'{msg_pl['key_error']} {new_key} {msg_pl['again']}'
-                            print(error_message)
+                            msg = f'{msg_pl['key_error']} {new_key}'
+                            msg = f'{msg} {msg_pl['again']}'
+                            print(msg)
                 elif choice == 'skip':
                     correcting = False
                     setting = False
                 else:
-                    error_message = f'{msg_pl['wrong_choice']} {msg_pl['again']}'
-                    print(error_message)
+                    msg = f'{msg_pl['wrong_choice']} {msg_pl['again']}'
+                    print(msg)
         while setting:
             msg = f'{msg_pl['input_value']} {key} {msg_pl['input_choices']}: '
             value = input(msg)
@@ -101,8 +102,8 @@ def set_starting_values(register):
                 register.set_value(key, False)
                 setting = False
             else:
-                error_message = f'{msg_pl["value_not_recognised"]} {msg_pl["input_choices"]}'
-                print(error_message)
+                msg = f'{msg_pl["invalid_value"]} {msg_pl["input_choices"]}'
+                print(msg)
 
 
 def choose_mode():
@@ -182,8 +183,8 @@ def calculate_average_difference(string_dict):
     strings = list(string_dict.keys())
     different_bits_sum = 0
     strings_number = len(strings)
-    for first_string, second_string in zip(strings, strings[1:]):
-        different_bits = sum(1 for b1, b2 in zip(first_string, second_string) if b1 != b2)
+    for first, second in zip(strings, strings[1:]):
+        different_bits = sum(1 for b1, b2 in zip(first, second) if b1 != b2)
         different_bits_sum += different_bits
     return different_bits_sum/(strings_number - 1)
 
@@ -194,7 +195,7 @@ def print_statistics(string_dict, space_utilization, average_difference):
     print(string_list)
     msg = f'{msg_pl['space_utilization']} {space_utilization*100}%'
     print(msg)
-    msg = f'{msg_pl['avg_difference']} {average_difference}'
+    msg = f'{msg_pl['avg_diff']} {average_difference}'
     print(msg)
 
 

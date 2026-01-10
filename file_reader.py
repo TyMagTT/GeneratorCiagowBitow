@@ -12,6 +12,13 @@ from os.path import splitext
 
 
 def create_components(component_list):
+    """
+    Reads connections from a list,
+    and creates dicts of unconnected flipflops and gates
+
+    :param component_list: list with objects from file
+    :type component_list: list
+    """
     if type(component_list) is not list:
         raise NotListError()
     created_flipflops = {}
@@ -45,6 +52,19 @@ def create_components(component_list):
 
 
 def connect_components(component_list, flipflops, gates):
+    """
+    Connects components in dictionaries,
+    based on data from a list from a file
+
+    :param component_list: list with objects from file
+    :type component_list: list
+
+    :param flipflops: dict with ids as keys and FlipFlop objects as values
+    :type flipflops: dict
+
+    :param gates: dict with ids as keys and Gate objects as values
+    :type gates: dict
+    """
     for component in component_list:
         id = component['id']
         input = component['input']
