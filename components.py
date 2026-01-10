@@ -25,6 +25,11 @@ class FlipFlop:
         self._stored = stored
         self._output = output
 
+    def set_input(self, new_input):
+        if type(new_input) is not FlipFlop and not isinstance(new_input, Gate):
+            raise TypeError()
+        self._input = new_input
+
     def value(self):
         return self._output
 
@@ -74,6 +79,13 @@ class MultiInputGate(Gate):
             raise InvalidInputNumber()
         super().__init__(input, output)
 
+    def set_input(self, new_input):
+        if type(new_input) is not list:
+            raise NotListError()
+        if len(new_input) < 2:
+            raise InvalidInputNumber()
+        self._input = new_input
+
 
 class NOT(Gate):
     """
@@ -90,6 +102,11 @@ class NOT(Gate):
         if type(input) is not FlipFlop:
             raise NotFlipFlopError()
         super().__init__(input, output)
+
+    def set_input(self, new_input):
+        if type(new_input) is not FlipFlop:
+            raise NotFlipFlopError()
+        self._input = new_input
 
     def calculate(self):
         return not self._input.value()

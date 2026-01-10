@@ -2,15 +2,23 @@ from components import (
     FlipFlop, NOT, AND, OR, XOR, NAND, NOR, XNOR, MultiInputGate
 )
 import json
-from errors import IncorrectGateType, NotListError
+from errors import (
+    IncorrectGateType,
+    NotListError,
+    MissingData,
+    NotFlipFlopError,
+    NotListError
+)
 
 
 def create_components(component_list):
-    if component_list is not list:
+    if type(component_list) is not list:
         raise NotListError()
     created_flipflops = {}
     created_gates = {}
     for component in component_list:
+        if 'id' not in component or 'input' not in component:
+            raise MissingData()
         id = component['id']
         placeholder_FlipFlop = FlipFlop(None)
         placeholder_list = [placeholder_FlipFlop, placeholder_FlipFlop]
@@ -44,19 +52,21 @@ def connect_components(component_list, flipflops, gates):
             current_flipflop = flipflops[id]
             current_gate = gates[id]
             if isinstance(current_gate, MultiInputGate):
+                if type(input) is not list:
+                    raise NotListError()
                 current_input = []
                 for input_part in input:
                     current_input.append(flipflops[input_part])
             else:
                 current_input = flipflops[input]
 
-            current_flipflop._input = current_gate
-            current_gate._input = current_input
+            current_flipflop.set_input(current_gate)
+            current_gate.set_input(current_input)
         else:
             current_flipflop = flipflops[id]
             current_input = flipflops[input]
 
-            current_flipflop._input = current_input
+            current_flipflop.set_input(current_input)
 
     return flipflops, gates
 

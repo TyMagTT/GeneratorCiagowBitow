@@ -2,6 +2,10 @@ class InvalidInputNumber(Exception):
     pass
 
 
+class InvalidInputType(TypeError):
+    pass
+
+
 class NotListError(TypeError):
     pass
 
@@ -15,4 +19,8 @@ class NotBoolError(TypeError):
 
 
 class IncorrectGateType(Exception):
+    pass
+
+
+class MissingData(KeyError):
     pass
