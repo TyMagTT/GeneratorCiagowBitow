@@ -64,7 +64,7 @@ def set_starting_values(register):
         setting = True
         if key not in register.flipflops:
             correcting = True
-            error_message = f'\n{messages_pl['key_error']} {key}\n'
+            error_message = f'{messages_pl['key_error']} {key}'
             print(error_message)
             while correcting:
                 print(messages_pl['choose_replace'])
@@ -77,7 +77,7 @@ def set_starting_values(register):
                             key = new_key
                             correcting = False
                         else:
-                            error_message = f'\n{messages_pl['key_error']} {new_key} {messages_pl['again']}'
+                            error_message = f'{messages_pl['key_error']} {new_key} {messages_pl['again']}'
                             print(error_message)
                 elif choice == 'skip':
                     correcting = False
@@ -86,7 +86,7 @@ def set_starting_values(register):
                     error_message = f'{messages_pl['wrong_choice']} {messages_pl['again']}'
                     print(error_message)
         while setting:
-            msg = f'\n{messages_pl['input_value']} {key} {messages_pl['input_choices']}: '
+            msg = f'{messages_pl['input_value']} {key} {messages_pl['input_choices']}: '
             value = input(msg)
             if value == 'True' or value == 'true' or value == '1':
                 register.set_value(key, True)
@@ -102,7 +102,6 @@ def set_starting_values(register):
 def choose_mode():
     choosing_mode = True
     while choosing_mode:
-        print('\n')
         print(messages_pl['choose_fixed'])
         print(messages_pl['choose_loop'])
         mode = input()
@@ -173,9 +172,14 @@ def calculate_space_utilization(register, strings):
     return generated_number/max_combinations
 
 
-def calculate_average_difference(register, strings):
-    for string in strings:
-        pass
+def calculate_average_difference(string_dict):
+    strings = list(string_dict.keys())
+    different_bits_sum = 0
+    strings_number = len(strings)
+    for first_string, second_string in zip(strings, strings[1:]):
+        different_bits = sum(1 for b1, b2 in zip(first_string, second_string) if b1 != b2)
+        different_bits_sum += different_bits
+    return different_bits_sum/(strings_number - 1)
 
 
 def main():
@@ -198,6 +202,7 @@ def main():
 
     print(string_dict)
     print(calculate_space_utilization(register, string_dict))
+    print(calculate_average_difference(string_dict))
 
 
 if __name__ == "__main__":
