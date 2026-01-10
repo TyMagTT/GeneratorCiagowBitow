@@ -2,13 +2,12 @@ from components import (
     FlipFlop, NOT, AND, OR, XOR, NAND, NOR, XNOR, MultiInputGate
 )
 import json
-
-
-class IncorrectGateType(Exception):
-    pass
+from errors import IncorrectGateType, NotListError
 
 
 def create_components(component_list):
+    if component_list is not list:
+        raise NotListError()
     created_flipflops = {}
     created_gates = {}
     for component in component_list:
@@ -32,14 +31,12 @@ def create_components(component_list):
             elif gate_type == 'XNOR':
                 created_gates[id] = XNOR(placeholder_list)
             else:
-                raise IncorrectGateType
+                raise IncorrectGateType()
         created_flipflops[id] = FlipFlop(None)
     return created_flipflops, created_gates
 
 
 def connect_components(component_list, flipflops, gates):
-    connected_flipflops = []
-    connected_gates = []
     for component in component_list:
         id = component['id']
         input = component['input']
@@ -55,21 +52,18 @@ def connect_components(component_list, flipflops, gates):
 
             current_flipflop._input = current_gate
             current_gate._input = current_input
-            connected_flipflops.append(current_flipflop)
-            connected_gates.append(current_gate)
         else:
             current_flipflop = flipflops[id]
             current_input = flipflops[input]
 
             current_flipflop._input = current_input
-            connected_flipflops.append(current_flipflop)
 
-    return connected_flipflops, connected_gates
+    return flipflops, gates
 
 
-def read_from_json(file_handle):
-    flipflops = []
-    gates = []
+def create_from_json(file_handle):
+    flipflops = {}
+    gates = {}
     component_list = json.load(file_handle)
     created_flipflops, created_gates = create_components(component_list)
     flipflops, gates = connect_components(component_list, created_flipflops, created_gates)

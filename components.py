@@ -1,18 +1,9 @@
-
-class InvalidInputNumber(Exception):
-    pass
-
-
-class NotListError(TypeError):
-    pass
-
-
-class NotFlipFlopError(TypeError):
-    pass
-
-
-class NotBoolError(TypeError):
-    pass
+from errors import (
+    NotBoolError,
+    NotFlipFlopError,
+    NotListError,
+    InvalidInputNumber
+)
 
 
 class FlipFlop:
@@ -97,7 +88,7 @@ class NOT(Gate):
     """
     def __init__(self, input, output=False):
         if type(input) is not FlipFlop:
-            raise NotFlipFlopError
+            raise NotFlipFlopError()
         super().__init__(input, output)
 
     def calculate(self):

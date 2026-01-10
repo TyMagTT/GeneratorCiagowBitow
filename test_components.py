@@ -1,9 +1,14 @@
 from components import (
-    InvalidInputNumber, NotListError, NotFlipFlopError, NotBoolError,
     FlipFlop, Gate, MultiInputGate,
     NOT, AND, OR, XOR, NAND, NOR, XNOR
 )
 import pytest
+from errors import (
+    NotBoolError,
+    NotFlipFlopError,
+    NotListError,
+    InvalidInputNumber
+)
 
 
 def test_FlipFlop_create():
