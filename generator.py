@@ -10,36 +10,7 @@ from errors import (
     NotJsonError
 )
 
-
-def load_file():
-    pass
-
-
-def starting_values():
-    pass
-
-
-def choose_output():
-    pass
-
-
-def choose_mode():
-    pass
-
-
-def generate_string():
-    pass
-
-
-def main():
-    # load file
-    # set starting values
-    # choose output
-    # mode (fixed number/until loop)
-    # generate
-    # save?
-    # compare
-    messages_pl = {
+messages_pl = {
         'welcome': 'Witaj użytkowniku! Ten program służy do generowania ciągów bitów na podstawie rejestru',
         'load_file': 'Podaj ścieżkę prowadzącą do pliku z połączeniami: ',
         'again': 'Spróbuj ponownie:',
@@ -61,6 +32,9 @@ def main():
         'fixed': 'Podaj liczbę bitów które chcesz wygenerować: ',
         'not_int': 'Liczba bitów musi być liczbą całkowitą.',
     }
+
+
+def load_file():
     print(messages_pl['welcome'])
     print(messages_pl['load_file'])
     loading = True
@@ -80,8 +54,10 @@ def main():
             print(error_message)
         except Exception as e:
             print(e)
+    return Register(flipflops, gates)
 
-    register = Register(flipflops, gates)
+
+def set_starting_values(register):
     print(messages_pl['input_values'])
     input_values = input()
     input_list = input_values.split(', ')
@@ -123,6 +99,8 @@ def main():
                 error_message = f'{messages_pl["value_not_recognised"]} {messages_pl["input_choices"]}'
                 print(error_message)
 
+
+def choose_output(register):
     choosing_output = True
     while choosing_output:
         output_id = input(messages_pl['choose_output'])
@@ -132,7 +110,10 @@ def main():
         except KeyError:
             error_message = f'{messages_pl["key_error"]} {output_id} {messages_pl["again"]}'
             print(error_message)
+    return output
 
+
+def choose_mode():
     choosing_mode = True
     while choosing_mode:
         print('\n')
@@ -155,6 +136,26 @@ def main():
         else:
             error_message = f'{messages_pl['wrong_choice']} {messages_pl['again']}'
             print(error_message)
+    return length
+
+
+def generate_string():
+    pass
+
+
+def main():
+    # load file
+    # set starting values
+    # choose output
+    # mode (fixed number/until loop)
+    # generate
+    # save?
+    # compare
+
+    register = load_file()
+    set_starting_values(register)
+    output = choose_output(register)
+    length = choose_mode()
 
     string = ""
     for i in range(length):
