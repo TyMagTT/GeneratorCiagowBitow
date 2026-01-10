@@ -17,7 +17,7 @@ messages_pl = {
         'no_file': 'Nie odnaleniono pliku.',
         'not_json': 'Plik musi mieć rozszerzenie ".json".',
         'no_access': 'Nie masz dostępu do tego pliku.',
-        'input_values': 'Podaj indentyfikatory przerzutników, ktorym chcesz ustawić wartości początkowe, oddzielone przecinkiem i spacją (domyślnie false)',
+        'input_values': 'Podaj identyfikatory przerzutników, ktorym chcesz ustawić wartości początkowe, oddzielone przecinkiem i spacją (domyślnie false)',
         'key_error': 'Nie znaleziono przerzutnika o identyfikatorze:',
         'choose_replace': 'Aby zamienić podany identyfikator na inny wpisz: "replace"',
         'replace': 'Podaj poprawiony identyfikator: ',
@@ -26,10 +26,9 @@ messages_pl = {
         'input_value': 'Podaj wartość przerzutnika',
         'value_not_recognised': 'Błędna wartość, dostępne wartości:',
         'input_choices': '(True/true/1 lub False/false/0)',
-        'choose_output': 'Podaj identyfikator przerzutnika wyjściowego: ',
         'choose_fixed': 'Aby wybrać konkretną długość ciągu do wygenerowania wpisz: "fixed"',
         'choose_loop': 'Aby wybrać generowanie aż ciąg się zapętli wpisz: "loop"',
-        'fixed': 'Podaj liczbę bitów które chcesz wygenerować: ',
+        'fixed': 'Podaj liczbę ciągów które chcesz wygenerować: ',
         'not_int': 'Liczba bitów musi być liczbą całkowitą.',
     }
 
@@ -100,19 +99,6 @@ def set_starting_values(register):
                 print(error_message)
 
 
-def choose_output(register):
-    choosing_output = True
-    while choosing_output:
-        output_id = input(messages_pl['choose_output'])
-        try:
-            output = register.flipflops[output_id]
-            choosing_output = False
-        except KeyError:
-            error_message = f'{messages_pl["key_error"]} {output_id} {messages_pl["again"]}'
-            print(error_message)
-    return output
-
-
 def choose_mode():
     choosing_mode = True
     while choosing_mode:
@@ -131,16 +117,65 @@ def choose_mode():
                     choosing_mode = False
                 except ValueError:
                     print(messages_pl['not_int'])
+                return False, length
         elif mode == 'loop':
             choosing_mode = False
+            return True, None
         else:
             error_message = f'{messages_pl['wrong_choice']} {messages_pl['again']}'
             print(error_message)
-    return length
 
 
-def generate_string():
-    pass
+def generate_string_fixed(register, length):
+    string_dict = {}
+    while length > 0:
+        string = ""
+        for flipflop in register.flipflops.values():
+            if flipflop.output():
+                char = '1'
+            else:
+                char = '0'
+            string += char
+        if string in string_dict:
+            string_dict[string] += 1
+        else:
+            string_dict[string] = 1
+        register.step()
+        length -= 1
+    return string_dict
+
+
+def generate_string_looping(register):
+    looping = True
+    string_dict = {}
+    while looping:
+        string = ""
+        for flipflop in register.flipflops.values():
+            if flipflop.output():
+                char = '1'
+            else:
+                char = '0'
+            string += char
+        if string in string_dict:
+            if string_dict[string] >= 2:
+                looping = False
+                return string_dict
+            string_dict[string] += 1
+        else:
+            string_dict[string] = 1
+        register.step()
+
+
+def calculate_space_utilization(register, strings):
+    flipflop_number = len(register.flipflops)
+    max_combinations = pow(2, flipflop_number)
+    generated_number = len(strings)
+    return generated_number/max_combinations
+
+
+def calculate_average_difference(register, strings):
+    for string in strings:
+        pass
 
 
 def main():
@@ -154,18 +189,15 @@ def main():
 
     register = load_file()
     set_starting_values(register)
-    output = choose_output(register)
-    length = choose_mode()
+    looping, length = choose_mode()
 
-    string = ""
-    for i in range(length):
-        if output.output():
-            char = '1'
-        else:
-            char = '0'
-        string += char
-        register.step()
-    print(string)
+    if looping:
+        string_dict = generate_string_looping(register)
+    else:
+        string_dict = generate_string_fixed(register, length)
+
+    print(string_dict)
+    print(calculate_space_utilization(register, string_dict))
 
 
 if __name__ == "__main__":
