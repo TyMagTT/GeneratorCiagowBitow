@@ -10,9 +10,11 @@ from errors import (
     NotJsonError
 )
 
+
 def main():
     # load file
     # set starting values
+    # choose output
     # mode (fixed number/until loop)
     # generate
     # save?
@@ -33,6 +35,11 @@ def main():
         'input_value': 'Podaj wartość przerzutnika',
         'value_not_recognised': 'Błędna wartość, dostępne wartości:',
         'input_choices': '(True/true/1 lub False/false/0)',
+        'choose_output': 'Podaj identyfikator przerzutnika wyjściowego: ',
+        'choose_fixed': 'Aby wybrać konkretną długość ciągu do wygenerowania wpisz: "fixed"',
+        'choose_loop': 'Aby wybrać generowanie aż ciąg się zapętli wpisz: "loop"',
+        'fixed': 'Podaj liczbę bitów które chcesz wygenerować: ',
+        'not_int': 'Liczba bitów musi być liczbą całkowitą.',
     }
     print(messages_pl['welcome'])
     print(messages_pl['load_file'])
@@ -53,6 +60,7 @@ def main():
             print(error_message)
         except Exception as e:
             print(e)
+
     register = Register(flipflops, gates)
     print(messages_pl['input_values'])
     input_values = input()
@@ -93,6 +101,48 @@ def main():
             else:
                 error_message = f'{messages_pl["value_not_recognised"]} {messages_pl["input_choices"]}'
                 print(error_message)
+
+    choosing_output = True
+    while choosing_output:
+        output_id = input(messages_pl['choose_output'])
+        try:
+            output = register.flipflops[output_id]
+            choosing_output = False
+        except KeyError:
+            error_message = f'{messages_pl["key_error"]} {output_id} {messages_pl["again"]}'
+            print(error_message)
+
+    choosing_mode = True
+    while choosing_mode:
+        print(messages_pl['choose_fixed'])
+        print(messages_pl['choose_loop'])
+        mode = input()
+        if mode == 'fixed':
+            setting_fixed = True
+            while setting_fixed:
+                print(messages_pl['fixed'])
+                length = input()
+                try:
+                    length = int(length)
+                    setting_fixed = False
+                    choosing_mode = False
+                except ValueError:
+                    print(messages_pl['not_int'])
+        elif mode == 'loop':
+            choosing_mode = False
+        else:
+            error_message = f'{messages_pl['wrong_choice']} {messages_pl['again']}'
+            print(error_message)
+
+    string = ""
+    for i in range(length):
+        if output.output():
+            char = '1'
+        else:
+            char = '0'
+        string += char
+        register.step()
+    print(string)
 
 
 if __name__ == "__main__":
