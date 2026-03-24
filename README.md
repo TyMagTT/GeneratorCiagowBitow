@@ -19,12 +19,13 @@ The example below shows the next steps of the simulation of register from test.j
 Each step a bit string is created by reading every flip-flop's stored value in order, and appended to the string
 
 <img width="2000" height="1414" alt="ExampleSimulation2" src="https://github.com/user-attachments/assets/a8227030-cc59-45ad-b3fa-89885a3af917" />
-Every flip-flop's value is updated to store the value on it's input
+In this diagram, white squares represent flip-flops storing true, and black squares represent flip-flops storing false
 
 <img width="2000" height="1414" alt="ExampleSimulation3" src="https://github.com/user-attachments/assets/77d89618-dd63-4d00-b77b-2976ad3d257c" />
-Logic gates change how the new values are calculated by doing logic operations
+Every flip-flop's value is updated to store the value on it's input
 
 <img width="2000" height="1414" alt="ExampleSimulation4" src="https://github.com/user-attachments/assets/e0b1cbd4-53e9-497a-8d9b-3d0f43cdab91" />
+Logic gates change how the new values are calculated by doing logic operations
 
 <img width="2000" height="1414" alt="ExampleSimulation5" src="https://github.com/user-attachments/assets/aba38c2a-7eeb-4997-8115-0e50083c92ec" />
 
