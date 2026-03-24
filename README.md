@@ -15,17 +15,20 @@ This project enables you to run a simulation on a fully customisable register co
 
 The example below shows the next steps of the simulation of register from test.json file:
 
-Example1
+<img width="2000" height="1414" alt="ExampleSimulation1" src="https://github.com/user-attachments/assets/9944443f-7205-4158-8303-13503ad3e83b" />
+Each step a bit string is created by reading every flip-flop's stored value in order, and appended to the string
 
-Example2
+<img width="2000" height="1414" alt="ExampleSimulation2" src="https://github.com/user-attachments/assets/a8227030-cc59-45ad-b3fa-89885a3af917" />
+Every flip-flop's value is updated to store the value on it's input
 
-Example3
+<img width="2000" height="1414" alt="ExampleSimulation3" src="https://github.com/user-attachments/assets/77d89618-dd63-4d00-b77b-2976ad3d257c" />
+Logic gates change how the new values are calculated by doing logic operations
 
-Example4
+<img width="2000" height="1414" alt="ExampleSimulation4" src="https://github.com/user-attachments/assets/e0b1cbd4-53e9-497a-8d9b-3d0f43cdab91" />
 
-Example5
+<img width="2000" height="1414" alt="ExampleSimulation5" src="https://github.com/user-attachments/assets/aba38c2a-7eeb-4997-8115-0e50083c92ec" />
 
-Example6
+<img width="2000" height="1414" alt="ExampleSimulation6" src="https://github.com/user-attachments/assets/d4297e0c-1e99-42c9-9ba8-163a7af0d1c0" />
 
 ## How to run the program
 
@@ -61,4 +64,4 @@ The register file has to be a .json file which contains a list of dictionaries. 
 
 Visual example of test.json file creating register on the right:
 
-FileExample
+<img width="2000" height="1414" alt="FileExample" src="https://github.com/user-attachments/assets/e63d5f67-dc3d-4010-a335-a1ee8eb7891e" />
